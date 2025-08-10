@@ -131,7 +131,7 @@ async function login(req, res) {
       httpOnly: true,
       path: "/",
       maxAge: 60 * 60, // 1 hora em segundos
-      sameSite: "strict",
+      sameSite: "none",
       secure: process.env.NODE_ENV === "production",
     });
 
