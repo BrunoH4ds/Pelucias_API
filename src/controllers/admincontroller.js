@@ -130,9 +130,9 @@ async function login(req, res) {
     const cookieHeader = serialize("adminToken", token, {
       httpOnly: true,
       path: "/",
-      maxAge: 60 * 60, // 1 hora em segundos
+      maxAge: 60 * 60 * 24 * 7, // 7 Dias
       sameSite: "none",
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
     });
 
     res.setHeader("Set-Cookie", cookieHeader);
