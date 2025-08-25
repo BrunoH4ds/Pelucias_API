@@ -1,3 +1,4 @@
+// routes/adminroutes.js
 import express from "express";
 import {
   getAdmins,
@@ -5,13 +6,19 @@ import {
   createadmin,
   updateadmin,
   deleteadmin,
-  login
+  login,
+  refresh,
+  logout,
 } from "../controllers/admincontroller.js";
 import { autenticarToken } from "../config/middleware/auth.js";
 
 const router = express.Router();
 
 router.post("/login", login);
+router.post("/refresh", refresh);
+router.post("/logout", logout);
+
+// Rotas protegidas
 router.get("/", autenticarToken, getAdmins);
 router.get("/:username", autenticarToken, getadminByUsername);
 router.post("/", autenticarToken, createadmin);

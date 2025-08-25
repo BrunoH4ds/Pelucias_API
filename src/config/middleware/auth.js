@@ -1,15 +1,20 @@
+// config/middleware/auth.js
 import jwt from "jsonwebtoken";
-const JWT_SECRET = process.env.JWT_SECRET;
+
+const SECRET_ACCESS = process.env.SECRET_ACCESS;
 
 export function autenticarToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; // "Bearer TOKEN"
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ erro: "Token ausente" });
 
-  if (!token) return res.status(401).json({ erro: "Token não fornecido" });
+  const token = authHeader.split(" ")[1];
+  if (!token) return res.status(401).json({ erro: "Token inválido" });
 
-  jwt.verify(token, JWT_SECRET, (err, usuario) => {
-    if (err) return res.status(403).json({ erro: "Token inválido ou expirado" });
-    req.usuario = usuario;
+  try {
+    const decoded = jwt.verify(token, SECRET_ACCESS);
+    req.auth = { userId: decoded.userId };
     next();
-  });
+  } catch {
+    return res.status(401).json({ erro: "Token expirado ou inválido" });
+  }
 }
